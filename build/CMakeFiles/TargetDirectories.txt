@@ -1,0 +1,4 @@
+/home/gb/dev/opengl-gltf-viewer/build/CMakeFiles/gltf-viewer.dir
+/home/gb/dev/opengl-gltf-viewer/build/CMakeFiles/run.dir
+/home/gb/dev/opengl-gltf-viewer/build/CMakeFiles/edit_cache.dir
+/home/gb/dev/opengl-gltf-viewer/build/CMakeFiles/rebuild_cache.dir
