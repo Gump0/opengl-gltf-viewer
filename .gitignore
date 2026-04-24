@@ -1,3 +1,6 @@
+# ignore build folder
+/[Bb]uild/
+
 # Prerequisites
 *.d
 
