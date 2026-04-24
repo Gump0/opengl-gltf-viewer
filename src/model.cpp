@@ -1,3 +1,6 @@
+#include <sys/stat.h>
+#include <filesystem> // both of these used for model finding algorithm. (should prob seperate this to another cpp file)
+#include <limits>     // for bad input handling
 #include "model.hpp"
 #include "shaderClass.hpp"
 
@@ -20,6 +23,50 @@ void Model::Draw(Shader& shader, Camera& camera)
     }
 }
 
+std::string Model::SelectModel()
+{
+    // check if 'models' folder exists
+    const char* modelsDirectory = "models";
+    struct stat sb;
+
+    if (stat(modelsDirectory, &sb) != 0)
+    {
+        std::cerr << "ERROR : 'models/' directory does not exist." << std::endl;
+        // program should probably terminate here.
+    }
+
+    // find any file that contains '.gltf' extension
+    // and output the option to the user
+    std::vector<std::string> files = findGLTFFiles(modelsDirectory);
+    if(files.size() <= 0)
+    {
+        std::cerr << "ERROR : no .gltf files were found in the 'models/' directory." << std::endl;
+        // program should probably terminate here.
+    }
+
+    std::cout << "GLTF FILES FOUND INSIDE THE 'models/' DIRECTORY:" << std::endl;
+    for (size_t i = 0; i < files.size(); i++)
+    {
+        std::cout << "[ " << i << " ] : " <<
+        files[i] << std::endl;
+    }
+
+    // request user input as a index.
+    while (true)
+    {
+        int input;
+        std::cout << "Enter available index :" << std::endl;
+        std::cin >> input;
+
+        if (input < files.size() && input > -1)
+        {
+            return files[input];
+        }
+    }
+
+    return std::string("");
+}
+
 void Model::loadMesh(unsigned int indMesh)
 {
     // get all accessor indices
@@ -30,18 +77,35 @@ void Model::loadMesh(unsigned int indMesh)
 
 	// use accessor indices to get all vertices components
 	std::vector<float> posVec = getFloats(JSON["accessors"][posAccInd]);
-	std::cerr << "posVec size: " << posVec.size() << std::endl;
-	if (posVec.empty()) { std::cerr << "ERROR: posVec empty, skipping mesh " << indMesh << std::endl; return; }
+	// std::cerr << "posVec size: " << posVec.size() << std::endl;
+	if (posVec.empty())
+	{
+	    std::cerr << "ERROR: posVec empty, skipping mesh " << indMesh << std::endl;
+		return;
+	}
+
 	std::vector<glm::vec3> positions = groupFloatsVec3(posVec);
 
+	// access normals
 	std::vector<float> normalVec = getFloats(JSON["accessors"][normalAccInd]);
-	std::cerr << "normalVec size: " << normalVec.size() << std::endl;
-	if (normalVec.empty()) { std::cerr << "ERROR: normalVec empty, skipping mesh " << indMesh << std::endl; return; }
+	// std::cerr << "normalVec size: " << normalVec.size() << std::endl;
+	if (normalVec.empty())
+	{
+	    std::cerr << "ERROR: normalVec empty, skipping mesh " << indMesh << std::endl;
+	    return;
+	}
+
 	std::vector<glm::vec3> normals = groupFloatsVec3(normalVec);
 
+	// access texture data
 	std::vector<float> texVec = getFloats(JSON["accessors"][texAccInd]);
-	std::cerr << "texVec size: " << texVec.size() << std::endl;
-	if (texVec.empty()) { std::cerr << "ERROR: texVec empty, skipping mesh " << indMesh << std::endl; return; }
+	// std::cerr << "texVec size: " << texVec.size() << std::endl;
+	if (texVec.empty())
+	{
+	    std::cerr << "ERROR: texVec empty, skipping mesh " << indMesh << std::endl;
+		return;
+	}
+
 	std::vector<glm::vec2> texUVs = groupFloatsVec2(texVec);
 
 	// combine all the vertex components and also get the indices and textures
@@ -168,7 +232,7 @@ std::vector<float> Model::getFloats(json accessor)
 	unsigned int accByteOffset = accessor.value("byteOffset", 0);
 	std::string type = accessor["type"];
 
-	// Get properties from the bufferView
+	// get properties from the bufferview
 	json bufferView = JSON["bufferViews"][buffViewInd];
 	unsigned int byteOffset = bufferView.value("byteOffset", 0u);
 
@@ -180,7 +244,7 @@ std::vector<float> Model::getFloats(json accessor)
 	else if (type == "VEC4") numPerVert = 4;
 	else throw std::invalid_argument("Type is invalid (not SCALAR, VEC2, VEC3, or VEC4)");
 
-	// Go over all the bytes in the data at the correct place using the properties from above
+	// go over all the bytes in the data at the correct place using the properties from above
 	unsigned int beginningOfData = byteOffset + accByteOffset;
 	unsigned int lengthOfData = count * 4 * numPerVert;
 	for (unsigned int i = beginningOfData; i < beginningOfData + lengthOfData; i += 4)
@@ -204,11 +268,11 @@ std::vector<GLuint> Model::getIndices(json accessor)
 	unsigned int accByteOffset = accessor.value("byteOffset", 0);
 	unsigned int componentType = accessor["componentType"];
 
-	// Get properties from the bufferView
+	// get properties from the bufferview
 	json bufferView = JSON["bufferViews"][buffViewInd];
 	unsigned int byteOffset = bufferView.value("byteOffset", 0u);
 
-	// Get indices with regards to their type: unsigned int, unsigned short, or short
+	// get indices with regards to their type: unsigned int, unsigned short, or short
 	unsigned int beginningOfData = byteOffset + accByteOffset;
 	if (componentType == 5125)
 	{
@@ -384,4 +448,25 @@ std::string Model::readFile(const char* filename)
 	}
 	std::cerr << "failed to read file" << std::endl;
 	throw(errno);
+}
+
+std::vector<std::string> Model::findGLTFFiles(const std::string& directory)
+{
+    const std::string extension = ".gltf";
+    std::vector<std::string> files;
+
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(directory))
+    {
+        if (!entry.is_regular_file())
+        {
+            continue;
+        }
+
+        if (entry.path().extension() == extension)
+        {
+            files.push_back(entry.path().string());
+        }
+    }
+
+    return files;
 }

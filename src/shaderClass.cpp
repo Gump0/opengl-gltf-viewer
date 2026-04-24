@@ -2,8 +2,8 @@
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {
-    std::string vertSrc = ReadFile(vertexFile);
-    std::string fragSrc = ReadFile(fragmentFile);
+    std::string vertSrc = readFile(vertexFile);
+    std::string fragSrc = readFile(fragmentFile);
 
     const char* vertexSource   = vertSrc.c_str();
     const char* fragmentSource = fragSrc.c_str();
@@ -12,7 +12,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, nullptr);
     glCompileShader(vertexShader);
-    CompileErrors(vertexShader, "VERTEX");
+    compileErrors(vertexShader, "VERTEX");
 
     int success;
     char infoLog[512];
@@ -27,7 +27,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSource, nullptr);
     glCompileShader(fragmentShader);
-    CompileErrors(fragmentShader, "FRAGMENT");
+    compileErrors(fragmentShader, "FRAGMENT");
 
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success)
@@ -64,7 +64,7 @@ void Shader::Delete()
     glDeleteProgram(shaderProgram);
 }
 
-void Shader::CompileErrors(uint shader, const char* type)
+void Shader::compileErrors(uint shader, const char* type)
 {
     GLint hasCompiled;
     char infoLog[1024];
@@ -88,7 +88,7 @@ void Shader::CompileErrors(uint shader, const char* type)
     }
 }
 
-std::string Shader::ReadFile(std::string path)
+std::string Shader::readFile(std::string path)
 {
     std::string content = "";
 

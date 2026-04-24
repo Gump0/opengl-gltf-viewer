@@ -17,10 +17,10 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(wWidth, wHeight, "first pyramid ;)", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(wWidth, wHeight, "openGL gltf viewer", nullptr, nullptr);
     if (!window)
     {
-        std::cerr << "Failed to create GLFW window\n";
+        std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
@@ -31,7 +31,7 @@ int main()
     // Initialize glad
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cerr << "Failed to initialize GLAD\n";
+        std::cerr << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
 
@@ -48,15 +48,15 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram.shaderProgram, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.shaderProgram, "lightPosition"), lightPosition.x, lightPosition.y, lightPosition.z);
 
-    // prevent see-through pyramid
+    // prevent faces from rendering on-top of one-another
     glEnable(GL_DEPTH_TEST);
 
     // camera
     Camera camera(glm::vec3(0.0f, 0.0f, 25.0f), wWidth, wHeight);
 
     // load 3d gltf model
-    std::string modelDir = "models/lowpoly-scimitar/scene.gltf";
-    Model model(modelDir.c_str());
+    std::string modelLocation = Model::SelectModel();
+    Model model(modelLocation.c_str());
 
     // render loop
     while (!glfwWindowShouldClose(window))

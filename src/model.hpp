@@ -12,7 +12,8 @@ public:
     Model(const char* file);
 
     void Draw(Shader& shader, Camera& camera);
-
+    static std::string SelectModel();       // method called prior to draw to obtain relevant file data.
+                                            // doesn't really need to be a member function.
 private:
     const char* file;
 	std::vector<unsigned char> data;
@@ -58,5 +59,8 @@ private:
 
 	// helper method to read file.
     std::string readFile(const char* filename);
+
+    // helper method to retrieve any file within the models folder
+    static std::vector<std::string> findGLTFFiles(const std::string& directory);
 };
 #endif

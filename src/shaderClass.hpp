@@ -18,8 +18,8 @@ class Shader
         void Delete();
 
     private:
-        void CompileErrors(uint shader, const char* type);
-        std::string ReadFile(std::string path);
+        void compileErrors(uint shader, const char* type);
+        std::string readFile(std::string path);
 };
 
 #endif

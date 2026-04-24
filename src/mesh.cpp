@@ -8,7 +8,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indicies, std::ve
 
     vao.Bind();
 
-    // generate vertext buffer object and links it to vertices
+    // generate vertex buffer object and links it to vertices
     VBO vbo(vertices);
     // generate element buffer array and link it with indicies
     EBO ebo(indicies);
@@ -59,17 +59,17 @@ void Mesh::Draw
     glUniform3f(glGetUniformLocation(shader.shaderProgram, "cameraPosition"), camera.position.x, camera.position.y, camera.position.z);
     camera.Matrix(shader, "camMatrix");
 
-    // Initialize matrices
+    // initialize matrices
 	glm::mat4 trans = glm::mat4(1.0f);
 	glm::mat4 rot = glm::mat4(1.0f);
 	glm::mat4 sca = glm::mat4(1.0f);
 
-	// Transform the matrices to their correct form
+	// transform the matrices to their correct form
 	trans = glm::translate(trans, translation);
 	rot = glm::mat4_cast(rotation);
 	sca = glm::scale(sca, scale);
 
-	// Push the matrices to the vertex shader
+	// push the matrices to the vertex shader
 	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "translation"), 1, GL_FALSE, glm::value_ptr(trans));
 	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "rotation"), 1, GL_FALSE, glm::value_ptr(rot));
 	glUniformMatrix4fv(glGetUniformLocation(shader.shaderProgram, "scale"), 1, GL_FALSE, glm::value_ptr(sca));
