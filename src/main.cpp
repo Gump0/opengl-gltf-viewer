@@ -55,8 +55,18 @@ int main()
     Camera camera(glm::vec3(0.0f, 0.0f, 25.0f), wWidth, wHeight);
 
     // load 3d gltf model
-    std::string modelLocation = Model::SelectModel();
+    std::string modelLocation;
+    try
+    {
+        modelLocation = Model::SelectModel();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "ERROR : " << e.what() << '\n';
+        return -1;
+    }
     Model model(modelLocation.c_str());
+
 
     // render loop
     while (!glfwWindowShouldClose(window))

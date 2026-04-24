@@ -1,6 +1,7 @@
 #include <sys/stat.h>
 #include <filesystem> // both of these used for model finding algorithm. (should prob seperate this to another cpp file)
 #include <limits>     // for bad input handling
+#include <stdexcept>
 #include "model.hpp"
 #include "shaderClass.hpp"
 
@@ -31,17 +32,15 @@ std::string Model::SelectModel()
 
     if (stat(modelsDirectory, &sb) != 0)
     {
-        std::cerr << "ERROR : 'models/' directory does not exist." << std::endl;
-        // program should probably terminate here.
+        throw std::runtime_error("'models/' directory does not exist.");
     }
 
     // find any file that contains '.gltf' extension
     // and output the option to the user
     std::vector<std::string> files = findGLTFFiles(modelsDirectory);
-    if(files.size() <= 0)
+    if (files.empty())
     {
-        std::cerr << "ERROR : no .gltf files were found in the 'models/' directory." << std::endl;
-        // program should probably terminate here.
+        throw std::runtime_error("No .gltf files found in 'models/' directory");
     }
 
     std::cout << "GLTF FILES FOUND INSIDE THE 'models/' DIRECTORY:" << std::endl;
@@ -51,12 +50,21 @@ std::string Model::SelectModel()
         files[i] << std::endl;
     }
 
-    // request user input as a index.
+    // request user input as an index.
     while (true)
     {
         int input;
         std::cout << "Enter available index :" << std::endl;
         std::cin >> input;
+
+        // input sanitization.
+        if (std::cin.fail())
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cerr << "Invalid input. Please enter a valid number." << std::endl;
+            continue;
+        }
 
         if (input < files.size() && input > -1)
         {
