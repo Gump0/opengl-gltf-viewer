@@ -17,12 +17,14 @@ uniform mat4 scale;         // imports mesh's scale data
 
 void main()
 {
-    // current postion is used to store the direction of the incoming light on the normal
-    currentPosition = vec3(model * translation * -rotation * scale * vec4(aPos, 1.0f));
-    // ^^ why multiplying rotation to postion AND making it negative?
-    // no fucking idea lmfao
-    gl_Position = camMatrix * vec4(aPos, 1.0f);
-    normal = aNormal;
+    mat4 modelFull = model * translation * rotation * scale;
+
+    currentPosition = vec3(modelFull * vec4(aPos, 1.0));
+    gl_Position = camMatrix * modelFull * vec4(aPos, 1.0f);
+
+    // prevents lighting from breaking under non-uniform scaling
+    normal = normalize(mat3(transpose(inverse(modelFull))) * aNormal);
+
     color = aColor;
-    texCoord = mat2(0.0, -1.0, 1.0, 0.0) * aTexture;
+    texCoord = aTexture;
 };

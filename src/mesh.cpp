@@ -15,10 +15,10 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indicies, std::ve
 
     // link VBO and VAO
     // second parameter effects what layout or "layer" (look to default.vert for details)
-    vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);                     // position
-    vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));   // color
-    vao.LinkAttrib(vbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));   // texture
-    vao.LinkAttrib(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(9 * sizeof(float)));   // normal
+    vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, position)); // position (vec3)
+    vao.LinkAttrib(vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normal));   // normal (vec3)
+    vao.LinkAttrib(vbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, color));    // color (vec3)
+    vao.LinkAttrib(vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, texUV));    // texture (vec2)
     // unbind all to prevent accidently modifying them.
     vao.Unbind();
     vbo.Unbind();

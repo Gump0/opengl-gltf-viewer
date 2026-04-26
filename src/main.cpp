@@ -51,8 +51,13 @@ int main()
     // prevent faces from rendering on-top of one-another
     glEnable(GL_DEPTH_TEST);
 
+    // opengl face-culling optimization
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
     // camera
-    Camera camera(glm::vec3(0.0f, 0.0f, 25.0f), wWidth, wHeight);
+    Camera camera(glm::vec3(0.0f, 0.0f, 5.0f), wWidth, wHeight);
 
     // load 3d gltf model
     std::string modelLocation;

@@ -6,9 +6,9 @@ out vec4 FragColor;         // outputs the colors in RGBA
                                 are CASE SENSITIVE */
 
 in vec3 currentPosition;    // imports the current position from the vertex shdader
-in vec3 normal;             // imports the normal from the vertext shader cuh
 in vec3 color;              // link vec3 color parameter from vertex shader
 in vec2 texCoord;           // impports the texture coordinates to the vertex shader
+in vec3 normal;             // imports the normal from the vertext shader cuh
 
 uniform sampler2D diffuse0; // gets the texture unit from the main function
 uniform sampler2D specular0;// grabs the specular map texture from main.cpp

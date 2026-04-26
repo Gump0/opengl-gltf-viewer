@@ -383,7 +383,7 @@ std::vector<Vertex> Model::assembleVertices
 				positions[i],
 				normals[i],
 				glm::vec3(1.0f, 1.0f, 1.0f),
-				texUVs[i]
+				glm::vec2(texUVs[i].x, 1.0f - texUVs[i].y) // invert V
 			}
 		);
 	}
