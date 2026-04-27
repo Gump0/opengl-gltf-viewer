@@ -1,5 +1,5 @@
 #include "model.hpp"
-
+#include "gui.hpp"
 
 const uint wWidth = 1920;
 const uint wHeight = 1080;
@@ -34,6 +34,10 @@ int main()
         std::cerr << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    // initialize imgui
+    GUI gui;
+    gui.InitializeImGUI(window);
 
     // generate shader object using shaders default.vert and default.frag
     Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
@@ -76,25 +80,32 @@ int main()
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        // queue and hadle glfw events
+        glfwPollEvents();
+
         // clear the screen
         glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // draw model
-        // tell openGL which shader program we want to use
-        model.Draw(shaderProgram, camera);
+        // buffer new gui frame
+        gui.NewFrameImGUI();
 
+        // handle camera inputs and matrices
         camera.Inputs(window);
         camera.UpdateMatrix(45.0f, 0.1f, 1000.0f);
         camera.Matrix(shaderProgram, "camMatrix");
+        // draw model
+        model.Draw(shaderProgram, camera);
+
+        // render ImGUI before glfw scene
+        gui.RenderImGUI();
 
         // swap back buffer with front buffer
         glfwSwapBuffers(window);
-        // queue and hadle glfw events
-        glfwPollEvents();
     }
 
     // cleanup
+    gui.CleanUpImGUI();
     shaderProgram.Delete();
     glfwDestroyWindow(window);
     glfwTerminate();
