@@ -1,5 +1,12 @@
 #include "model.hpp"
 #include "gui.hpp"
+#include "light.hpp"
+
+// todo :: seperate light code to seperate object
+
+// ^^ somehow get the old light block code back for this projects implementation.
+// line 109 creates a model. but we need to take a different approach ofc for the light cube
+// maybe we should handle this in a seperate 'light cube' object class.
 
 const uint wWidth = 1920;
 const uint wHeight = 1080;
@@ -42,9 +49,13 @@ int main()
     // generate shader object using shaders default.vert and default.frag
     Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
+    // initialize light object
+    Light light;
+    light.InitializeLight();
+
 	// light data n stuff
 	glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPosition = glm::vec3(0.5f, 5.0f, 10.0f);
+	glm::vec3 lightPosition = glm::vec3(0.5f, 0.0f, -3.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPosition);
 
@@ -76,7 +87,6 @@ int main()
     }
     Model model(modelLocation.c_str());
 
-
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -94,8 +104,12 @@ int main()
         camera.Inputs(window);
         camera.UpdateMatrix(45.0f, 0.1f, 1000.0f);
         camera.Matrix(shaderProgram, "camMatrix");
+
         // draw model
         model.Draw(shaderProgram, camera);
+
+        // render light and draw it's shader
+        light.RenderLight(camera, lightPosition);
 
         // render ImGUI before glfw scene
         gui.RenderImGUI();
@@ -106,6 +120,7 @@ int main()
 
     // cleanup
     gui.CleanUpImGUI();
+    light.CleanUpLight();
     shaderProgram.Delete();
     glfwDestroyWindow(window);
     glfwTerminate();

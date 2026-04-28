@@ -16,7 +16,7 @@ void GUI::NewFrameImGUI()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-    ImGui::ShowDemoWindow();
+    DisplayCustomUI();
 }
 
 void GUI::RenderImGUI()
@@ -30,4 +30,17 @@ void GUI::CleanUpImGUI()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+}
+
+void GUI::DisplayCustomUI()
+{
+    ImGui::Begin("Point Light");
+        ImGui::SliderInt("Rotation Angle", &lightAngle, 0.0f, 360.0f);
+        ImGui::SliderFloat("Light Intensity", &lightIntensity, 0.0f, 25.0f);
+        // ImGui::SliderFloat("Light Orbit Distance", &orbitDistance, 3.0f, 100.0f);
+        // ImGui::ColorEdit3("Light Color", glm::value_ptr(lightColor));
+        ImGui::Checkbox("Enable Auto-Rotate", &autoRotate);
+        ImGui::Separator();
+        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+    ImGui::End();
 }

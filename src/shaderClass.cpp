@@ -5,7 +5,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
     std::string vertSrc = readFile(vertexFile);
     std::string fragSrc = readFile(fragmentFile);
 
-    const char* vertexSource   = vertSrc.c_str();
+    const char* vertexSource = vertSrc.c_str();
     const char* fragmentSource = fragSrc.c_str();
 
     // vertex shader
@@ -46,7 +46,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
     if (!success)
     {
         glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        std::cerr << "Shader program linking failed:\n" << infoLog << '\n';
+        std::cerr << "Shader program linking failed:" << infoLog << std::endl;
     }
 
     // delete the now useless vert and frag shader.
