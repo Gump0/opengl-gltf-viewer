@@ -13,8 +13,12 @@ class Light
 public:
     Light();
     void InitializeLight();
-    void RenderLight(Camera& camera, glm::vec3 lightPosition);
+    void RenderLight(Camera& camera);
     void CleanUpLight();
+
+   	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPosition = glm::vec3(0.5f, 0.0f, -3.0f);
+
 private:
     Shader lightShader;
     VAO lightVAO;

@@ -54,14 +54,13 @@ int main()
     light.InitializeLight();
 
 	// light data n stuff
-	glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPosition = glm::vec3(0.5f, 0.0f, -3.0f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, lightPosition);
+	// initalize light parameter values
+	light.lightPosition = glm::vec3(0.5f, 0.0f, -3.0f);
+    light.lightColor    = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	shaderProgram.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.shaderProgram, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.shaderProgram, "lightPosition"), lightPosition.x, lightPosition.y, lightPosition.z);
+	glUniform4f(glGetUniformLocation(shaderProgram.shaderProgram, "lightColor"), light.lightColor.x, light.lightColor.y, light.lightColor.z, light.lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
 
     // prevent faces from rendering on-top of one-another
     glEnable(GL_DEPTH_TEST);
@@ -109,7 +108,7 @@ int main()
         model.Draw(shaderProgram, camera);
 
         // render light and draw it's shader
-        light.RenderLight(camera, lightPosition);
+        light.RenderLight(camera);
 
         // render ImGUI before glfw scene
         gui.RenderImGUI();

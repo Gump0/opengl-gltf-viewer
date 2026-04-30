@@ -58,10 +58,14 @@ void Light::InitializeLight()
     lightShader.Activate();
 }
 
-void Light::RenderLight(Camera& camera, glm::vec3 lightPosition)
+void Light::RenderLight(Camera& camera)
 {
     lightShader.Activate();
 
+    // upload color to shader program
+    glUniform4f(glGetUniformLocation(lightShader.shaderProgram, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+
+    // build and upload model matrix
     glm::mat4 lightModel = glm::mat4(1.0f);
     lightModel = glm::translate(lightModel, lightPosition);
     glUniformMatrix4fv(glGetUniformLocation(lightShader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
