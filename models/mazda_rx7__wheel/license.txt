@@ -1,0 +1,11 @@
+Model Information:
+* title:	MAZDA_RX7_ Wheel
+* source:	https://sketchfab.com/3d-models/mazda-rx7--wheel-ac11fffbbb504d118d988f5f2dc438f9
+* author:	Naman Deep (https://sketchfab.com/namandeep444)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "MAZDA_RX7_ Wheel" (https://sketchfab.com/3d-models/mazda-rx7--wheel-ac11fffbbb504d118d988f5f2dc438f9) by Naman Deep (https://sketchfab.com/namandeep444) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
