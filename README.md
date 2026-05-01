@@ -1,6 +1,10 @@
 # opengl-gltf-viewer
 
-A lightweight glTF 3D model viewer built with C++17 and OpenGL.
+<p align="center">
+  <img src="/readme-src/cover-art.png" width="550">
+</p>
+
+A lightweight gltf 3D model viewer built with C++17 and OpenGL.
 
 ![C++17](https://img.shields.io/badge/C%2B%2B-17-blue?style=flat-square)
 ![OpenGL](https://img.shields.io/badge/OpenGL-3-green?style=flat-square)
@@ -10,10 +14,12 @@ A lightweight glTF 3D model viewer built with C++17 and OpenGL.
 
 ## Features
 
-- Load and render `.gltf` and `.glb` models
-- Real-time camera controls (orbit, pan, zoom)
+- Load and render `.gltf` models
+- Point-light and ambient lighting simulation done with `GLSL` shader scripting
+- Support for specular maps
 - ImGui-powered UI panel for scene inspection
-- Supports meshes, materials, and textures from the glTF spec
+- Supports loading textures and meshes (uv's, normals, vertices)
+- First-person camera controls (orbit, pan)
 
 ---
 
@@ -23,7 +29,7 @@ A lightweight glTF 3D model viewer built with C++17 and OpenGL.
 |---|---|
 | [OpenGL](https://www.opengl.org/) | Graphics API |
 | [GLFW](https://www.glfw.org/) | Window & input handling |
-| [ImGui](https://github.com/ocornut/imgui) | Immediate-mode UI |
+| [ImGui](https://github.com/ocornut/imgui) | Cool user UI |
 
 > Requires a compiler with **C++17** support.
 
@@ -31,11 +37,11 @@ A lightweight glTF 3D model viewer built with C++17 and OpenGL.
 
 ## Getting Started
 
-> ** ENSURE THAT COMPILED PROGRAM HAS ACCESS TO `/models` DIRECTORY **
+> **ENSURE THAT COMPILED PROGRAM HAS ACCESS TO `/models` DIRECTORY**
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/opengl-gltf-viewer.git
+git clone https://github.com/Gump0/opengl-gltf-viewer.git
 cd opengl-gltf-viewer
 
 # Build (example with CMake)
@@ -53,13 +59,21 @@ sudo chmod +x build.sh      # trust me bro
 ```
 
 Then drop any `.gltf` file (including it's dependencies) into the `/models` directory.
-* Examples are included in the `/models` directory. *
+*Examples are included in the `/models` directory.*
 
 ---
 
 ## Demo
 
-> *Screenshots or GIFs of your demo models here.*
+Real-time point-light and ambient lighting simulation.\
+Implemented with `OpenGL` and `GLSL` shader scripting.
+<p>
+  <img src="/readme-src/light-shading-demo.gif" width="800">
+</p>
+
+<p>
+  <img src="/readme-src/light-color-demo.gif" width="800">
+</p>
 
 ---
 
