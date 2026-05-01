@@ -1,8 +1,6 @@
 #ifndef LIGHT_CLASS_H
 #define LIGHT_CLASS_H
 
-// #include <glm/glm.hpp>
-
 #include "shaderClass.hpp"
 #include "VAO.hpp"
 #include "EBO.hpp"

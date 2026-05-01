@@ -2,12 +2,6 @@
 #include "gui.hpp"
 #include "light.hpp"
 
-// todo :: seperate light code to seperate object
-
-// ^^ somehow get the old light block code back for this projects implementation.
-// line 109 creates a model. but we need to take a different approach ofc for the light cube
-// maybe we should handle this in a seperate 'light cube' object class.
-
 const uint wWidth = 1920;
 const uint wHeight = 1080;
 
@@ -97,7 +91,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // buffer new gui frame
-        gui.NewFrameImGUI();
+        gui.NewFrameImGUI(light);
 
         // handle camera inputs and matrices
         camera.Inputs(window);
@@ -106,6 +100,10 @@ int main()
 
         // draw model
         model.Draw(shaderProgram, camera);
+
+        // ensure shader gets updated light color and light position :)
+       	glUniform4f(glGetUniformLocation(shaderProgram.shaderProgram, "lightColor"), light.lightColor.x, light.lightColor.y, light.lightColor.z, light.lightColor.w);
+        glUniform3f(glGetUniformLocation(shaderProgram.shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
 
         // render light and draw it's shader
         light.RenderLight(camera);

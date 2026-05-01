@@ -22,7 +22,9 @@ class Camera
         uint width;
         uint height;
 
-        const float speed = 0.02f;
+        float speed = releasedSpeed;
+        const float releasedSpeed = 0.03f;
+        const float shiftSpeed = 0.15f;
         const float sensitivity = 100.0f;
 
         Camera(glm::vec3 position, uint width, uint height);
