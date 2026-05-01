@@ -1,5 +1,6 @@
 #include "model.hpp"
-
+#include "gui.hpp"
+#include "light.hpp"
 
 const uint wWidth = 1920;
 const uint wHeight = 1080;
@@ -35,18 +36,25 @@ int main()
         return -1;
     }
 
+    // initialize imgui
+    GUI gui;
+    gui.InitializeImGUI(window);
+
     // generate shader object using shaders default.vert and default.frag
     Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
+    // initialize light object
+    Light light;
+    light.InitializeLight();
+
 	// light data n stuff
-	glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPosition = glm::vec3(0.5f, 5.0f, 10.0f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, lightPosition);
+	// initalize light parameter values
+	light.lightPosition = glm::vec3(0.5f, 0.0f, -3.0f);
+    light.lightColor    = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	shaderProgram.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.shaderProgram, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.shaderProgram, "lightPosition"), lightPosition.x, lightPosition.y, lightPosition.z);
+	glUniform4f(glGetUniformLocation(shaderProgram.shaderProgram, "lightColor"), light.lightColor.x, light.lightColor.y, light.lightColor.z, light.lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
 
     // prevent faces from rendering on-top of one-another
     glEnable(GL_DEPTH_TEST);
@@ -72,29 +80,44 @@ int main()
     }
     Model model(modelLocation.c_str());
 
-
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        // queue and hadle glfw events
+        glfwPollEvents();
+
         // clear the screen
         glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // draw model
-        // tell openGL which shader program we want to use
-        model.Draw(shaderProgram, camera);
+        // buffer new gui frame
+        gui.NewFrameImGUI(light);
 
+        // handle camera inputs and matrices
         camera.Inputs(window);
         camera.UpdateMatrix(45.0f, 0.1f, 1000.0f);
         camera.Matrix(shaderProgram, "camMatrix");
 
+        // draw model
+        model.Draw(shaderProgram, camera);
+
+        // ensure shader gets updated light color and light position :)
+       	glUniform4f(glGetUniformLocation(shaderProgram.shaderProgram, "lightColor"), light.lightColor.x, light.lightColor.y, light.lightColor.z, light.lightColor.w);
+        glUniform3f(glGetUniformLocation(shaderProgram.shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
+
+        // render light and draw it's shader
+        light.RenderLight(camera);
+
+        // render ImGUI before glfw scene
+        gui.RenderImGUI();
+
         // swap back buffer with front buffer
         glfwSwapBuffers(window);
-        // queue and hadle glfw events
-        glfwPollEvents();
     }
 
     // cleanup
+    gui.CleanUpImGUI();
+    light.CleanUpLight();
     shaderProgram.Delete();
     glfwDestroyWindow(window);
     glfwTerminate();

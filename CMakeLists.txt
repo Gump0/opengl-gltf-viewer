@@ -11,7 +11,20 @@ file(GLOB_RECURSE SOURCES
     src/*.c
 )
 
-add_executable(gltf-viewer ${SOURCES})
+# imgui stuff
+set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/include/imgui)
+
+set(IMGUI_SOURCES
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/imgui_impl_opengl3.cpp
+)
+
+add_executable(gltf-viewer ${SOURCES} ${IMGUI_SOURCES})
 
 target_include_directories(gltf-viewer PRIVATE
     include

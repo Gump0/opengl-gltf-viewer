@@ -43,13 +43,22 @@ void Camera::Inputs(GLFWwindow* window)
 	{
 		position += speed * glm::normalize(glm::cross(orientation, up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ||
+	    glfwGetKey(window, GLFW_KEY_LEFT_ALT == GLFW_PRESS))
 	{
 		position += speed * up;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
 		position += speed * -up;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	{
+		speed = shiftSpeed;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+	{
+		speed = releasedSpeed;
 	}
 
 	// handles mouse inputs
